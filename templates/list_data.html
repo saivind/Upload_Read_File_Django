@@ -1,0 +1,133 @@
+<style>
+  select {
+      margin: 50px;
+      width: auto;
+      padding: 0px 40px 0px 40px;
+      font-size: 10px;
+      border: solid #CCC;
+      height: 43px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 10px;
+      text-align:center;
+  }
+</style>
+{% extends "users/index.html" %}
+<body>
+  
+{% block content %}
+<!-- Page Heading -->
+<div id="content-wrapper" class="d-flex flex-column">
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Requirements List</h1>
+  
+</div>
+
+<form name="getfilename" method="POST" style="margin-left: 50px;" action="{% url 'Files:requirements_list' %}">
+  {% csrf_token %}
+  
+    <div>
+        
+        <p class="form-box">
+          <label for="fname">Select the File to view the Requirements:</label>
+          
+          <select name="fname" id="fname" class="selectpicker show-tick form-select form-select-sm" data-live-search="true" data-size="6" multiple data-actions-box="true" data-width="30%" style="margin-left: 100px;">
+                            
+            {% for row in dropdown %}
+        
+                <option style="color:rgb(118, 111, 111)" data-tokens={{row}} > {{row}}
+
+            {% endfor %}
+                <!--option value="all"> All-->
+        </select>
+        
+          <button type="submit" name="submit"  style="margin-left: 40px; height:40px; width:auto; font-size:16px; border-radius: 10px;" text-align="center;" padding="35px 52px;" class="btn btn-outline-secondary btn-sm">Get Requirments</button>
+        </p>
+        <br>
+        <!-- <button type="submit" name="submit">Submit</button> -->
+    </div>
+</form>
+<div class="container-fluid">  
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary"> Selected File: {{filename}}</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">   
+          <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length" id="dataTable_length">
+                  <label>Show 
+                    <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm">
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select> 
+                  entries</label>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div id="dataTable_filter" class="dataTables_filter">
+                  <label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></label>
+                </div>
+              </div>
+            </div>    
+          <table class="table table-bordered table-hover" id="tabledata" width="100%" cellspacing="0">
+          
+            <thead class="table-primary">
+
+              <tr>
+                <th>Requirement_ID</th>
+                <th>Requirement</th>
+                <th>FileID</th>
+                <th>UserID</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              {% for req in requirements %}  
+                <tr>
+                  <td>{{req.ReqId}}</td>
+                  <td>{{req.ReqText}}</td>
+                  <td>{{req.FileId_id}}</td>
+                  <td>{{req.Req_UserId}}</td>
+                  
+                </tr>
+                {% endfor %} 
+            </tbody>
+          </table>	
+    
+
+          {% if users.has_other_pages %}
+          <nav aria-label="...">
+            <ul class="pagination pagination-sm">
+              {% if users.has_previous %}
+                <li><a href="?page={{ users.previous_page_number }}" class="page-link">&laquo;</a></li>
+              {% else %}
+                <li class="disabled" ><span class="page-link">&laquo;</span></li>
+              {% endif %}
+              {% for i in users.paginator.page_range %}
+                {% if users.number == i %}
+                  <li class="active" ><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                  <li><a href="?page={{ i }}"  class="page-link">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if users.has_next %}
+                <li><a href="?page={{ users.next_page_number }}" class="page-link">&raquo;</a></li>
+              {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+{% endblock %}
