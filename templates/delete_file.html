@@ -1,0 +1,52 @@
+<style>
+    select {
+        margin: 50px;
+        width: auto;
+        padding: 0px 40px 5px 40px;
+        font-size: 10px;
+        border: solid #CCC;
+        height: 43px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 10px;
+        text-align:center;
+    }
+</style>
+{% extends "users/index.html" %}
+
+<body>
+  
+{% block content %}
+    <!-- Page Heading -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4" style="margin-left: 45px;">
+            <h1 class="h3 mb-0 text-gray-800">Delete File</h1>
+
+        </div>
+        <form name="getfilename" method="POST" style="margin-left: 50px;" action="{% url 'Files:del_file' %}">
+            {% csrf_token %}
+            <div>
+                <p class="form-box">
+                
+                    <label for="file_sel" >Select a file to delete:</label>
+                    
+                    <select name="file_sel" id="user" class="selectpicker show-tick form-select form-select-sm" data-live-search="true" data-size="5" multiple data-actions-box="true" data-width="30%" style="margin-left: 100px;">
+                        
+                        {% for row in dropdown %}
+                    
+                            <option style="color:rgb(118, 111, 111)"  value={{row}} > {{row}}
+
+                        {% endfor %}
+                            
+                    </select>
+                    
+                    <button type="submit" name="delete" style="margin-left: 40px; height:40px; width: 160px; font-size:16px; border-radius: 10px;" text-align="center;" padding="35px 52px;" class="btn btn-outline-secondary btn-sm">Delete</button>
+
+                </p>
+            </div>
+            <br><br><br><br><br><br><br><br><br>
+        </form>
+    </div>
+
+{% endblock %}
