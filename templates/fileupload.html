@@ -1,0 +1,202 @@
+<style>
+    select {
+        margin-left: 10%;
+        width: auto;
+        padding: 0px 40px 5px 40px;
+        font-size: smaller;
+        border: solid #CCC;
+        height: 43px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 10px;
+        text-align:center;
+        
+    }
+</style>
+
+{% extends "users/index.html" %}
+<body>
+  
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4" style="margin-left: 100px;">
+  <h1 class="h3 mb-0 text-gray-800">Upload the Requirements</h1>
+  
+</div>
+
+<div>
+<div>
+<form name="FileUploadView" style="margin-left: 100px;"  border-radius=35px; action="{% url 'Files:fileupload' %}" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" method="post" enctype="multipart/form-data" class="form-label">
+    
+    {% csrf_token %}
+        
+        <br>
+        <p>
+            
+            {{ form.as_table }}
+            <button type="submit" name="Upload" class="btn btn-outline-secondary" style="margin-left: 0px;" >Upload</button>
+            <p>
+                <fieldset>
+                    
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox small" style="margin-left: 40px;">
+                            <input type="checkbox" class="custom-control-input" id="version" name="version" value="True" onclick="myFunction()">
+                            <label class="custom-control-label" for="version"><h6>Click the checkbox if the file has a previous version</h6></label>
+                            
+                            
+                        </div>
+                    </div>
+                </fieldset>
+            </p>
+            
+            <select name="fname" id="fname" class="form-select" arclass="selectpicker show-tick form-select form-select-sm" data-live-search="true" data-size="8" style="display:none; margin-left: 10%;" data-actions-box="false" data-width="30%" style="margin-left: 100px;">
+                <option value="" selected disabled hidden>Choose Previous Version File</option>
+                {% for row in dropdown %}
+            
+                    <option style="color:rgb(118, 111, 111)" data-tokens={{row}} > {{row}}
+
+                {% endfor %}
+                    <!--option value="all"> All-->
+            </select>
+            
+            
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+            <script type="text/javascript">
+                function myFunction() {
+                    var checkBox = document.getElementById("version");
+                    
+                        if (checkBox.checked == true) {
+                            $("#fname").show();
+                        } else {
+                            $("#fname").hide();
+                        }
+                    
+                }
+            </script>
+                
+
+            {{ form.errors }}
+            {% for message in messages %}
+                <p id="messages">{{message}}</p>
+            {% endfor %}
+            <!-- <div class="mb-3">
+                <label for="formFileSm" class="form-label">Small file input example</label>
+                <input class="form-control form-control-sm" id="formFileSm" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            </div> -->
+            
+                
+             
+        </p>
+        
+        <!-- <table>
+            
+            
+            {% if submitbutton == "Upload"  %}
+                <h3> Uploaded file name is {{ filename }}</h3>
+    
+                <h4> The columns in file are  
+                {% for row in columns %}
+            
+                    {{ row }}&nbsp;&nbsp;
+    
+                    <br>
+                {% endfor %} 
+    
+                </h4>
+                
+    
+            {% endif %}
+        </table>    -->
+        
+</form>
+</div>
+<div>
+<form name="GetColumns" method="POST" action="{% url 'Files:uploaded' %}">
+   
+    {% csrf_token %}
+    <div>
+                                
+        <label for="filename" style="margin-left: 100px;">Uploaded File : </label> 
+        <input type="text" style="margin-left: 100px;" border-radius=35px; id="filename" name="filename" value={{file_details}}  readonly class="form-control-plaintext"><br>
+        <!--<select name="filepath">
+            <option value= {{file_details}} > {{ file_details}}
+        </select> -->
+        
+    </div>
+        <div class="content">
+        
+            
+             
+            <p class="form-box" style="margin-left: 100px;">
+                <label for="req_id" >Requirement ID</label>
+                <select name="req_id" id="columns"  class="form-select form-select-sm" style="margin-left: 20px;">
+                    <option value="" style="color:rgb(172, 158, 158)" selected disabled hidden>Choose here</option>
+                    {% for row in columns %}
+                        
+                    <option style="color:rgb(118, 111, 111)" value= {{row}} /> {{row}}
+
+                
+                    {% endfor %}
+                </select>
+            </p>
+            <br><br>
+
+            <p class="form-box" style="margin-left: 100px;">
+                <label for="req_text">Requirement Text</label>
+                <select name="req_text" id="columns" class="form-select form-select-sm" style="margin-left: 12px;">
+                    <option value="" selected disabled hidden>Choose here</option>
+                    {% for row in columns %}
+                        
+                    <option value= {{row}} /> {{row}}
+
+                
+                    {% endfor %}
+                </select>
+            </p> <br>
+            <br>
+
+            <p class="form-box" style="margin-left: 100px;">
+                <label for="target">Requirement Target</label>
+                <select name="target" id="columns"class="form-select form-select-sm" style="margin-left: 2px;">
+                    <option value="" selected disabled hidden>Choose here</option>
+                    {% for row in columns %}
+                        
+                    <option value= {{row}} /> {{row}}
+
+    
+                    {% endfor %}
+                </select>
+            </p> <br>
+            <br>
+         
+            <p class="form-box" style="margin-left: 100px;">
+                <label for="assign_to">Assign To:</label>
+                <select name="assign_to" id="columns"class="form-select form-select-sm" style="margin-left: 70px;">   
+                    <option value=" " selected disabled hidden>Choose here</option>
+                    {% for row in columns %}
+                        
+                    <option value= {{row}} /> {{row}}
+
+    
+                    {% endfor %}
+                    <option value="Null">New</option>
+                </select>
+            </p> <br>
+            <br>
+            
+            <p class="form-box">
+            <button type="submit" name="Confirm_Upload" style="margin-left: 250px;" class="btn btn-outline-secondary">Confirm_Upload</button>
+            </p>
+        
+    
+</div>
+</form>
+</div>
+</div>
+<a href="{% url 'Files:requirements_list' %}" class="previous" style="margin-left: 100px;">See All Requirements</a>
+
+<a href="{% url 'Files:fileupload' %}" class="previous" style="margin-left: 200px;">Upload a New File of Requirements</a>
+</body>
+    
+{% endblock %}
